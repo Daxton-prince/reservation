@@ -1,0 +1,8 @@
+my-reservation-app/
+├── api/
+│   └── send-order.js       # Node.js serverless backend
+├── public/
+│   └── style.css           # Frontend CSS
+├── index.html              # Frontend form
+├── package.json            # Node.js dependencies
+└── .env.local              # Environment variables (hidden)

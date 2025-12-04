@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation Form</title>
+    <link rel="stylesheet" href="public/style.css">
+</head>
+<body>
+    <section id="reservation">
+        <div class="contact-form">
+            <form id="reservationForm">
+                <h3 style="text-align: center;">Reservation Form</h3>
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="time">Time</label>
+                    <input type="time" id="time" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" class="form-control" required>
+                        <option value="1">1 Person</option>
+                        <option value="2">2 People</option>
+                        <option value="3">3 People</option>
+                        <option value="4">4 People</option>
+                        <option value="5">5 People</option>
+                        <option value="6">6 People</option>
+                        <option value="7">7+ People</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="customGuestDiv" style="display:none;">
+                    <label for="customGuests">Enter Number</label>
+                    <input type="number" id="customGuests" class="form-control" min="1" placeholder="Enter number">
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Order Details / Special Requests</label>
+                    <textarea id="message" class="form-control" placeholder="Type your order..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Send Order</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        const guestsSelect = document.getElementById("guests");
+        const customGuestDiv = document.getElementById("customGuestDiv");
+
+        guestsSelect.addEventListener("change", () => {
+            customGuestDiv.style.display = guestsSelect.value === "custom" ? "block" : "none";
+        });
+
+        document.getElementById("reservationForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            let guestsValue = guestsSelect.value;
+            if (guestsValue === "custom") {
+                guestsValue = document.getElementById("customGuests").value || "Custom";
+            }
+
+            const data = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                date: document.getElementById("date").value,
+                time: document.getElementById("time").value,
+                guests: guestsValue,
+                message: document.getElementById("message").value
+            };
+
+            const res = await fetch("/api/send-order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            alert(result.message);
+        });
+    </script>
+</body>
+</html>
